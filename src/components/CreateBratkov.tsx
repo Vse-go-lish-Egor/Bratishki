@@ -4,7 +4,7 @@ import { v1 } from "uuid";
 import ListBratkov  from "./ListBratkov";
 import { Bratok } from "../API/BratokAPI";
 import ClipLoader from "react-spinners/ClipLoader";
-import { addData,getQuery,deleteQuery } from "../hoocks/BratokHoocks";
+import {useBratokAdding,useBratokDeleting,useBratokGeting } from "../hoocks/BratokHoocks";
 
 
 type SortType = 'time' | 'alphabet';
@@ -13,12 +13,12 @@ export function CreateBratkov(){
     const [bratok, setBratok] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''})
     const [bratki, setBratki] = useState<Bratok[]>([])
     const [searchName, setSearchName] = useState<string>('')
+
     const [error, setError] = useState<string>('')
     const [sortType, setSortType] = useState<SortType>('time') 
     const [isKojak, setIsKojak] = useState<boolean>(false)
     const [resultBratki, setResultBratki] = useState(bratki);
-    
-
+    const [bratokForAdding, setBratokForAdding] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''});
 
     function sortBratki(bratki: Bratok[]): Bratok[] {
       console.log(sortType)   
@@ -47,12 +47,13 @@ export function CreateBratkov(){
     })
 
     function addBratka(){
-      const bratokForAdding: Bratok = {...bratok!, id: undefined, dateTime: new Date(Date.now())};  
       if(error === ''){
-         setBratki([...bratki, bratokForAdding]);
-         setBratok({...bratok!, name: ''});
-         hoocks.addData.mutate(bratokForAdding)
+        setBratokForAdding({...bratok!, id: undefined, dateTime: new Date(Date.now())});
+        setBratki([...bratki, bratokForAdding]);
+        setBratok({...bratok!, name: ''});
+
         }
+      
         
     }
    
@@ -81,10 +82,9 @@ export function CreateBratkov(){
             </CheckboxCharacteristic>
         </Characteristic>
         <AddBlock>
-            <Add onClick={()=>{addBratka()}}>Добавить братка в семью</Add>
-            {hoocks.addData.isLoading && <ClipLoader color={'black'} size={50} />}
-            {hoocks.addData.error && <span>{hoocks.addData.error.stack}</span>}
-            
+            <Add onClick={()=>{addBratka(); useBratokAdding().mutate(bratokForAdding)}}>Добавить братка в семью</Add>
+            {useBratokAdding().isLoading && <ClipLoader size={50} color='#8cc84b'/>}
+            {useBratokAdding().isError && <span>Произошла ошибкат</span>}
 
         </AddBlock>
         
