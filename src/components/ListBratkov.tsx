@@ -5,7 +5,8 @@ import { Bratok } from "../API/BratokAPI"
 
 
 export default function ListBratkov({bratki, onDelete, withKojak}: {bratki: Bratok[]; onDelete: (bratok: string)=>void; withKojak: boolean}){ 
-    if (bratki.length === 0) {
+  console.log(bratki); 
+  if (bratki.length === 0) {
       return <span>Братков нет</span>
     }
 

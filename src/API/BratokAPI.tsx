@@ -24,7 +24,7 @@ export interface Bratok{
     private domain: string;
     private rootDomain: string;
   
-    constructor(baseUrl = "https://crudcrud.com/api/8495160a40484996b690340d9ad7e9f6", domain = "bratki") {
+    constructor(baseUrl = "https://crudcrud.com/api/ccfe5759718c4bc6b08d5bf496f28186S", domain = "bratki") {
       this.baseUrl = baseUrl;
       this.domain = domain;
       this.rootDomain = `${this.baseUrl}/${this.domain}`;
@@ -34,14 +34,13 @@ export interface Bratok{
         const response = await axios.get(this.rootDomain);
         const data: BratokRes[] =  await response.data;
         const bratki: Bratok[] = data.map(bratok=>({...bratok, id: bratok._id})) 
+        console.log(bratki);
         return bratki;
        
     } 
       
    async addBratka(bratok: Bratok) {
-    const response = await axios.post(this.rootDomain,{
-      body: bratok    
-    });
+    const response = await axios.post(this.rootDomain,{...bratok});
     return response.status === 200;
    }
     

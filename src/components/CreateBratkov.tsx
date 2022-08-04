@@ -4,33 +4,40 @@ import { v1 } from "uuid";
 import ListBratkov  from "./ListBratkov";
 import { Bratok } from "../API/BratokAPI";
 import ClipLoader from "react-spinners/ClipLoader";
-import {useBratokAdding,useBratokDeleting,useBratokGeting } from "../hoocks/BratokHoocks";
+import {useBratokAdding,useBratokDeleting,useBratokGetting } from "../hoocks/BratokHoocks";
+ 
+
 
 
 type SortType = 'time' | 'alphabet';
 
 export function CreateBratkov(){
+    
+    const bratokAdd = useBratokAdding();
+    const bratokGet = useBratokGetting();
     const [bratok, setBratok] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''})
     const [bratki, setBratki] = useState<Bratok[]>([])
     const [searchName, setSearchName] = useState<string>('')
-
+    const [data, setData] = useState<Bratok[]>([])
     const [error, setError] = useState<string>('')
     const [sortType, setSortType] = useState<SortType>('time') 
     const [isKojak, setIsKojak] = useState<boolean>(false)
-    const [resultBratki, setResultBratki] = useState(bratki);
-    const [bratokForAdding, setBratokForAdding] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''});
-
+    
+    useEffect(()=>{
+      if(bratokGet.data!=undefined) setData(bratokGet.data!);
+    },[])
     function sortBratki(bratki: Bratok[]): Bratok[] {
-      console.log(sortType)   
       if(sortType === 'time') {
         return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
       } else {
         return bratki.sort((a, b) => a.name > b.name ? 1 : -1);
       }
+
     }
-    useEffect(() => {
+   /* useEffect(() => {
+      
       setResultBratki([...sortBratki(searchName === '' ? bratki : bratki.filter(bratok=>bratok.name.includes(searchName)))])
-    },[bratki, searchName, sortType])
+    },[bratki, searchName, sortType])*/
     
    
 
@@ -48,12 +55,11 @@ export function CreateBratkov(){
 
     function addBratka(){
       if(error === ''){
-        setBratokForAdding({...bratok!, id: undefined, dateTime: new Date(Date.now())});
-        setBratki([...bratki, bratokForAdding]);
+        const bratokForAdding:Bratok=({...bratok!, id: undefined, dateTime: new Date(Date.now())});
         setBratok({...bratok!, name: ''});
-
+        bratokAdd.mutate(bratokForAdding);
+        
         }
-      
         
     }
    
@@ -82,10 +88,10 @@ export function CreateBratkov(){
             </CheckboxCharacteristic>
         </Characteristic>
         <AddBlock>
-            <Add onClick={()=>{addBratka(); useBratokAdding().mutate(bratokForAdding)}}>Добавить братка в семью</Add>
-            {useBratokAdding().isLoading && <ClipLoader size={50} color='#8cc84b'/>}
-            {useBratokAdding().isError && <span>Произошла ошибкат</span>}
-
+            <Add onClick={()=>{addBratka()}}>Добавить братка в семью</Add>
+            {bratokAdd.isLoading && <ClipLoader size={50} color='#8cc84b'/>}
+            {bratokAdd.isError && <span>Произошла ошибка</span>}
+            
         </AddBlock>
         
         </CreatBlock>
@@ -100,12 +106,20 @@ export function CreateBratkov(){
                 <SortButton onClick={()=>setIsKojak(!isKojak)}>Показать братков с кожаками</SortButton> 
             </SearchLine>
         </div>
-        <ListBratkov withKojak={isKojak} bratki={resultBratki} onDelete={
+        
+        {bratokGet.isLoading && <ClipLoader size={50} color='#8cc84b'/>}
+        {bratokGet.error !==null && <span>Что-то пошло не так</span>}   
+         
+        {bratokGet.data !== undefined &&
+        <ListBratkov withKojak={isKojak} bratki={data}
+          onDelete={
             (bratok)=>{
                 setBratki(bratki.filter(b=>bratok !== b.id));
                 
             }}/>
-    </div>);
+          }        
+    </div>
+    );
 }
 
 

@@ -12,12 +12,12 @@ export const useBratokAdding = () =>{
     
 }
 
-export const useBratokGeting =()=> {
+export const useBratokGetting =()=> {
    return useQuery< Bratok[], Error>(['getQuery'], ()=>API.getBratkov())
 }
 
-export const useBratokDeleting = (id:string) =>{
-return useQuery<boolean, Error>(['deleteQuery', id], ()=>API.resignationOfBratok(id));
+export const useBratokDeleting = () =>{
+return useMutation<boolean, Error, string>((id)=>API.resignationOfBratok(id));
 }
 
 
