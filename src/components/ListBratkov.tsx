@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Bratok } from "../API/BratokAPI"
 
 
-export default function ListBratkov({bratki, onDelete, withKojak}: {bratki: Bratok[]; onDelete: (bratok: string)=>void; withKojak: boolean}){ 
+export default function ListBratkov({bratki, onDelete, withKojak, sortType}: {bratki: Bratok[]; onDelete: (bratok: string)=>void; withKojak: boolean; sortType: string}){ 
   console.log(bratki); 
   if (bratki.length === 0) {
       return <span>Братков нет</span>
@@ -13,9 +13,18 @@ export default function ListBratkov({bratki, onDelete, withKojak}: {bratki: Brat
     if(withKojak) {
       bratki = bratki.filter(b=>b.kojak===true);
     }
-    
+    function sortBratki(bratki: Bratok[]): Bratok[] {
+      if(sortType === 'time') {
+        return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
+      } else {
+        return bratki.sort((a, b) => a.name > b.name ? 1 : -1);
+      }
+
+    }
+   
+
     return(
-        <AllBratki>{bratki.map(bratok=>
+        <AllBratki>{sortBratki(bratki).map(bratok=>
             <List>
                 <Container>
                     <p>Имя братка: {bratok.name}</p>

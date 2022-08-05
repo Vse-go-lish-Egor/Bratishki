@@ -15,17 +15,14 @@ export function CreateBratkov(){
     
     const bratokAdd = useBratokAdding();
     const bratokGet = useBratokGetting();
+    const bratokDel = useBratokDeleting();
     const [bratok, setBratok] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''})
-    const [bratki, setBratki] = useState<Bratok[]>([])
     const [searchName, setSearchName] = useState<string>('')
-    const [data, setData] = useState<Bratok[]>([])
     const [error, setError] = useState<string>('')
     const [sortType, setSortType] = useState<SortType>('time') 
     const [isKojak, setIsKojak] = useState<boolean>(false)
     
-    useEffect(()=>{
-      if(bratokGet.data!=undefined) setData(bratokGet.data!);
-    },[])
+    
     function sortBratki(bratki: Bratok[]): Bratok[] {
       if(sortType === 'time') {
         return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
@@ -111,11 +108,10 @@ export function CreateBratkov(){
         {bratokGet.error !==null && <span>Что-то пошло не так</span>}   
          
         {bratokGet.data !== undefined &&
-        <ListBratkov withKojak={isKojak} bratki={data}
+        <ListBratkov withKojak={isKojak} bratki={bratokGet.data!} sortType={sortType}
           onDelete={
-            (bratok)=>{
-                setBratki(bratki.filter(b=>bratok !== b.id));
-                
+            (id)=>{
+                bratokDel.mutate(id) 
             }}/>
           }        
     </div>

@@ -24,7 +24,7 @@ export interface Bratok{
     private domain: string;
     private rootDomain: string;
   
-    constructor(baseUrl = "https://crudcrud.com/api/ccfe5759718c4bc6b08d5bf496f28186S", domain = "bratki") {
+    constructor(baseUrl = "https://crudcrud.com/api/35d22c1b89bf473a87e5e1c14f04db19", domain = "bratki") {
       this.baseUrl = baseUrl;
       this.domain = domain;
       this.rootDomain = `${this.baseUrl}/${this.domain}`;
