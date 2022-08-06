@@ -13,31 +13,19 @@ type SortType = 'time' | 'alphabet';
 
 export function CreateBratkov(){
     
-    const bratokAdd = useBratokAdding();
+    const bratokAdd = useBratokAdding({onSuccess: () => {
+      bratokGet.refetch();
+    }});
     const bratokGet = useBratokGetting();
-    const bratokDel = useBratokDeleting();
+    const bratokDel = useBratokDeleting({onSuccess: () => {
+      bratokGet.refetch();
+    }});
     const [bratok, setBratok] = useState<Bratok>({kojak: false, shampoo: false, perhot: false, name: ''})
     const [searchName, setSearchName] = useState<string>('')
     const [error, setError] = useState<string>('')
     const [sortType, setSortType] = useState<SortType>('time') 
     const [isKojak, setIsKojak] = useState<boolean>(false)
     
-    
-    function sortBratki(bratki: Bratok[]): Bratok[] {
-      if(sortType === 'time') {
-        return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
-      } else {
-        return bratki.sort((a, b) => a.name > b.name ? 1 : -1);
-      }
-
-    }
-   /* useEffect(() => {
-      
-      setResultBratki([...sortBratki(searchName === '' ? bratki : bratki.filter(bratok=>bratok.name.includes(searchName)))])
-    },[bratki, searchName, sortType])*/
-    
-   
-
     useEffect(()=>{
         if(bratok.name.length<3 && bratok.name.length !== 0){ 
         setError('Прояви уважение и дай братку более длинное имя!');
@@ -48,18 +36,16 @@ export function CreateBratkov(){
         if(bratok.name.length===0){
           setError('Прояви уважение и дай братку более длинное имя!');
         }
-    })
+    }, [bratok.name])
 
     function addBratka(){
       if(error === ''){
         const bratokForAdding:Bratok=({...bratok!, id: undefined, dateTime: new Date(Date.now())});
         setBratok({...bratok!, name: ''});
         bratokAdd.mutate(bratokForAdding);
-        
         }
-        
     }
-   
+  console.log(`BRATOK_DATA: ${bratokGet.data}`)
     return(
     <div>
        <CreatBlock> 
@@ -108,10 +94,10 @@ export function CreateBratkov(){
         {bratokGet.error !==null && <span>Что-то пошло не так</span>}   
          
         {bratokGet.data !== undefined &&
-        <ListBratkov withKojak={isKojak} bratki={bratokGet.data!} sortType={sortType}
+        <ListBratkov withKojak={isKojak} bratki={bratokGet.data} sortType={sortType}
           onDelete={
             (id)=>{
-                bratokDel.mutate(id) 
+                bratokDel.mutate(id)
             }}/>
           }        
     </div>

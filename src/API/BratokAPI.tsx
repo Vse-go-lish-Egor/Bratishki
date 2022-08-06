@@ -41,12 +41,13 @@ export class BratokApi {
 
   async addBratka(bratok: Bratok) {
     const response = await axios.post(this.rootDomain, { ...bratok });
-    return response.status === 200;
+    console.log(response.status)
+    return response.status === 201;
   }
 
   async resignationOfBratok(id: string) {
     const response = await axios.delete(`${this.rootDomain}/${id}`)
-    return response.status === 200;
+    return response.status === 201;
 
   }
 

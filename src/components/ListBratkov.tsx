@@ -6,13 +6,14 @@ import { Bratok } from "../API/BratokAPI"
 
 export default function ListBratkov({bratki, onDelete, withKojak, sortType}: {bratki: Bratok[]; onDelete: (bratok: string)=>void; withKojak: boolean; sortType: string}){ 
   console.log(bratki); 
-  if (bratki.length === 0) {
-      return <span>Братков нет</span>
-    }
-
     if(withKojak) {
       bratki = bratki.filter(b=>b.kojak===true);
     }
+
+    if (bratki.length === 0) {
+      return <span>Братков нет</span>
+    }
+  
     function sortBratki(bratki: Bratok[]): Bratok[] {
       if(sortType === 'time') {
         console.log(typeof bratki[0].dateTime)
