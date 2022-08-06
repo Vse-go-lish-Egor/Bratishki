@@ -33,7 +33,7 @@ export interface Bratok{
     async getBratkov(): Promise<Bratok[]> {
         const response = await axios.get(this.rootDomain);
         const data: BratokRes[] =  await response.data;
-        const bratki: Bratok[] = data.map(bratok=>({...bratok, id: bratok._id})) 
+        const bratki: Bratok[] = data.map(bratok=>({...bratok, id: bratok._id, dateTime: new Date(bratok.dateTime)})) 
         console.log(bratki);
         return bratki;
        

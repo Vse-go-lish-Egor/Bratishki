@@ -15,6 +15,7 @@ export default function ListBratkov({bratki, onDelete, withKojak, sortType}: {br
     }
     function sortBratki(bratki: Bratok[]): Bratok[] {
       if(sortType === 'time') {
+        console.log(typeof bratki[0].dateTime)
         return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
       } else {
         return bratki.sort((a, b) => a.name > b.name ? 1 : -1);
