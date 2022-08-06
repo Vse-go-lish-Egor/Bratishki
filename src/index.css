@@ -5,7 +5,7 @@ body {
 -webkit-background-size:100%;
 -o-background-size:100%;
 background-size:100%;
-  background: url('/src/components/bratok.png');
+  background: url('/src/assets/bratok.png');
   background-repeat: no-repeat;
   background-position:  center;
   background-size: cover;
