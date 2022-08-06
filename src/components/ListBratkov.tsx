@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import kojakpng from './kojak.png';
+import kojakpng from '../assets/kojak.png';
 import styled from "styled-components";
 import { Bratok } from "../API/BratokAPI"
 
@@ -26,7 +26,7 @@ export default function ListBratkov({bratki, onDelete, withKojak, sortType}: {br
 
     return(
         <AllBratki>{sortBratki(bratki).map(bratok=>
-            <List>
+            <List key={bratok.id}>
                 <Container>
                     <p>Имя братка: {bratok.name}</p>
                     <p>Перхоть: {bratok.perhot?'О, нет, перхоть есть(!':'Ура, перхоти нет!'}</p>

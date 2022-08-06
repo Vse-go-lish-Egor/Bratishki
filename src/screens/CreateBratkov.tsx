@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import { v1 } from "uuid";
-import ListBratkov  from "./ListBratkov";
+import ListBratkov  from "../components/ListBratkov";
 import { Bratok } from "../API/BratokAPI";
 import ClipLoader from "react-spinners/ClipLoader";
-import {useBratokAdding,useBratokDeleting,useBratokGetting } from "../hoocks/BratokHoocks";
+import {useBratokAdding,useBratokDeleting,useBratokGetting } from "../hooks/bratokHoocks";
  
 
 
