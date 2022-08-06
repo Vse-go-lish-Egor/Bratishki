@@ -1,52 +1,52 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import kojakpng from '../assets/kojak.png';
 import styled from "styled-components";
 import { Bratok } from "../API/BratokAPI"
 
 
-export default function ListBratkov({bratki, onDelete, withKojak, sortType}: {bratki: Bratok[]; onDelete: (bratok: string)=>void; withKojak: boolean; sortType: string}){ 
-  console.log(bratki); 
-    if(withKojak) {
-      bratki = bratki.filter(b=>b.kojak===true);
+export default function ListBratkov({ bratki, onDelete, withKojak, sortType }: { bratki: Bratok[]; onDelete: (bratok: string) => void; withKojak: boolean; sortType: string }) {
+  console.log(bratki);
+  if (withKojak) {
+    bratki = bratki.filter(b => b.kojak === true);
+  }
+
+  if (bratki.length === 0) {
+    return <span>Братков нет</span>
+  }
+
+  function sortBratki(bratki: Bratok[]): Bratok[] {
+    if (sortType === 'time') {
+      console.log(typeof bratki[0].dateTime)
+      return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
+    } else {
+      return bratki.sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
     }
 
-    if (bratki.length === 0) {
-      return <span>Братков нет</span>
-    }
-  
-    function sortBratki(bratki: Bratok[]): Bratok[] {
-      if(sortType === 'time') {
-        console.log(typeof bratki[0].dateTime)
-        return bratki.sort((bratok1, bratok2) => (bratok1.dateTime!.getTime() - bratok2.dateTime!.getTime()));
-      } else {
-        return bratki.sort((a, b) => a.name > b.name ? 1 : -1);
-      }
+  }
 
-    }
-   
 
-    return(
-        <AllBratki>{sortBratki(bratki).map(bratok=>
-            <List key={bratok.id}>
-                <Container>
-                    <p>Имя братка: {bratok.name}</p>
-                    <p>Перхоть: {bratok.perhot?'О, нет, перхоть есть(!':'Ура, перхоти нет!'}</p>
-                    <p>Шампунь: {bratok.shampoo?'Есть!':'Нет, нужно купить!'}</p>
-                    <p>Кожак: {bratok.kojak?'Модный браток - залог успеха. Кожак есть!'  :'Наверное в стирке... Кожака нет'}<Kojak visibal={bratok.kojak} src={kojakpng}/></p>
-                </Container>
-                <Delete onClick={()=>onDelete(bratok.id!)}>Отправить братка в отставку </Delete>
-              
-            </List>)}
-            
-        </AllBratki>)
+  return (
+    <AllBratki>{sortBratki(bratki).map(bratok =>
+      <List key={bratok.id}>
+        <Container>
+          <p>Имя братка: {bratok.name}</p>
+          <p>Перхоть: {bratok.perhot ? 'О, нет, перхоть есть(!' : 'Ура, перхоти нет!'}</p>
+          <p>Шампунь: {bratok.shampoo ? 'Есть!' : 'Нет, нужно купить!'}</p>
+          <p>Кожак: {bratok.kojak ? 'Модный браток - залог успеха. Кожак есть!' : 'Наверное в стирке... Кожака нет'}<Kojak visibal={bratok.kojak} src={kojakpng} /></p>
+        </Container>
+        <Delete onClick={() => onDelete(bratok.id!)}>Отправить братка в отставку </Delete>
+
+      </List>)}
+
+    </AllBratki>)
 }
 
 
 
-const Kojak = styled.img<{visibal: boolean}>`
+const Kojak = styled.img<{ visibal: boolean }>`
 
-  hight: ${props=>props.visibal? '50px': '0'};
-  width: ${props=>props.visibal? '50px': '0'};
+  hight: ${props => props.visibal ? '50px' : '0'};
+  width: ${props => props.visibal ? '50px' : '0'};
 `
 
 
